@@ -1,24 +1,26 @@
+import { useEffect } from "react";
 import { useState } from "react";
+import api from "../services/api";
 
 export function Conversor (props) {
 
-    const [input, setInput] = useState ('')
+    const [input, setInput] = useState (0)
     const [convertido, setConvertido] = useState (0)
 
     let dePara = `${props.moedaA}-${props.moedaB}`
-    let url = `http://economia.awesomeapi.com.br/json/last/${dePara}`
 
-    async function converter () {
+    async function handleSearch (){
 
-        try{
-          const response = await fetch(url);
-          const res = await response.json();
-          const valor = await fetch(res.bid);
-          const resultado = await valor.json();
-          console.log(resultado);
-        } catch {
-        }
-    }
+    useEffect(() => {
+        api
+            .get({dePara})
+            .then((response) => setConvertido(response.data))
+            .catch((err) => {
+                console.error("ops! ocorreu um erro" + err);
+            });     
+    }, []);}
+
+    const valorMoeda = {input} * {convertido};
 
     return (
         <div className="conversor">
@@ -30,8 +32,8 @@ export function Conversor (props) {
                 type="text"
                 onChange={(event) => setInput(event.target.value)}                
                 />
-                <button className="searchButton" onClick={converter}>Converter</button>
-                <h2>{resultado}</h2>
+                <button className="searchButton" onClick={handleSearch}>Converter</button>
+                <h2>{convertido.bid}</h2>
         </div>
-    )
+    );
 }
