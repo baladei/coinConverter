@@ -8,15 +8,22 @@ export function Conversor (props) {
     let dePara = `${props.moedaA}-${props.moedaB}`
     const url = "http://economia.awesomeapi.com.br/json/last/"
 
-    function valorMoeda () {
+    function getContent () {
         fetch(url`${dePara}`)
-            .then( response => console.log (response.json()))
+            .then( response => response.json())
+            .then ( data => renderApiResult.textContent = JSON.stringify(data))
             .catch( error => console.error (error))
     }
-
-    valorMoeda ()
-
     
+    function getCoin () {
+        fetch(url`${dePara}`)
+            .then ( response => response.json())
+            .then ( data => {
+                return renderApiResult.textContent = JSON.stringify(data.USDBRL.bid)
+            })
+            .catch ( error => console.error (error))
+        }
+
     return (
         <div className="conversor">
 
@@ -27,8 +34,8 @@ export function Conversor (props) {
                 type="text"
                 onChange={(event) => setInput(event.target.value)}                
                 />
-                <button className="searchButton">Converter</button>
-                <h2>{url}{dePara}</h2>
+                <button className="searchButton" onClick={getCoin}>Converter</button>
+                <h2>testando</h2>
         </div>
     );
 }
